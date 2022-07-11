@@ -1,0 +1,89 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "mediawiki.fullname" . }}
+  labels:
+    {{- include "mediawiki.labels" . | nindent 4 }}
+  annotations:
+     helm.sh/hook-weight: "5"
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "mediawiki.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "mediawiki.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "mediawiki.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      volumes:
+        - name: mediawiki-data
+          persistentVolumeClaim:
+            claimName: mediawiki-data
+      initContainers:
+         - name: mariadb-create-directory-structure
+           image: busybox
+           command:
+             [
+               "sh",
+               "-c",
+               "mkdir -p /bitnami/ && chown -R 1001:1001 /bitnami",
+             ]
+           volumeMounts:
+           - name: mediawiki-data
+             mountPath: /bitnami/
+
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: MEDIAWIKI_HOST
+              value: "{{ .Values.MEDIAWIKI_HOST }}"
+            {{- toYaml .Values.envVars | nindent 12 }}
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+            - name: https
+              containerPort: 8443
+              protocol: TCP
+          lifecycle:
+            postStart:
+              exec:
+                command:
+                - /bin/sh
+                - -c
+                - if [ -f "/bitnami/mediawiki/LocalSettings.php" ]; then sed -i 's/HERECOMESIP/{{ .Values.MEDIAWIKI_HOST }}/g' /bitnami/mediawiki/LocalSettings.php; else echo "file not found"; fi 
+          volumeMounts:
+            - mountPath: /bitnami/mediawiki
+              name: mediawiki-data
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
