@@ -14,6 +14,9 @@ imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 
+updateStrategy:
+  type: RollingUpdate
+
 serviceAccount:
   # Specifies whether a service account should be created
   create: true
@@ -99,3 +102,14 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
+
+mariadb:
+   replicaCount: 1
+
+   image:
+     repository: docker.io/bitnami/mariadb
+     pullPolicy: IfNotPresent
+     # Overrides the image tag whose default is the chart appVersion.
+     tag: "10.6"
+
+
