@@ -13,6 +13,6 @@ entries:
     name: mediawiki
     type: application
     urls:
-    - https://Navjot-S95.github.com/MEDIAWIKI_helm_chart/mediawiki-0.1.0.tgz
+    - https://navjot-s95.github.io/MEDIAWIKI_helm_chart/mediawiki-0.1.0.tgz
     version: 0.1.0
 generated: "2022-07-12T05:00:43.008730149Z"
