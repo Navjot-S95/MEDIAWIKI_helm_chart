@@ -1,0 +1,18 @@
+apiVersion: v1
+entries:
+  mediawiki:
+  - apiVersion: v2
+    appVersion: 1.16.0
+    created: "2022-07-12T05:00:43.010633948Z"
+    dependencies:
+    - name: mariadb
+      repository: file://../charts/mariadb
+      version: 0.1.0
+    description: A Helm chart for mediawiki Deployment
+    digest: 515ac4aebeaf5015104eaf8faa49851f96b1a853dc5f92a297d442db88766fb2
+    name: mediawiki
+    type: application
+    urls:
+    - https://Navjot-S95.github.com/MEDIAWIKI_helm_chart/mediawiki-0.1.0.tgz
+    version: 0.1.0
+generated: "2022-07-12T05:00:43.008730149Z"
