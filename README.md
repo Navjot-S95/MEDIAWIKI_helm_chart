@@ -17,8 +17,8 @@ It also packages the [mariadb](https://hub.docker.com/r/bitnami/mariadb/) deploy
 
 - Kubernetes 1.19+
 - Helm 3.2.0+
-- PV provisioner support in the underlying infrastructure
-- ReadWriteMany volumes for deployment scaling
+- PV provisioner support in the underlying infrastructure 
+- ReadWriteMany volumes for deployment scaling (If autoscaling is enabled, default is set to ReadWriteOne)
 
 ## Installing the Chart
 
@@ -70,3 +70,14 @@ The command removes all the Kubernetes components associated with the chart and 
 | `mariadb.image.pullPolicy`   | Image pull policy                                                                                                                                  | `IfNotPresent`        |
 
 ## Deployment and Autoscaling
+Deafult updateStrategy.type is rolling update
+For autoscaling, you can enable autoscaling via values file and provide min,max replica's
+**Note**:
+for autoscaling, change the accessModes to ReadWriteMany in pvc.yaml
+
+## DEMO
+![image](https://user-images.githubusercontent.com/36199283/178411391-e324485a-2381-43de-92e4-e6db420eb7fd.png)
+![image](https://user-images.githubusercontent.com/36199283/178411405-43664554-b8ee-4a4c-87dc-d2bbbe583908.png)
+
+
+
