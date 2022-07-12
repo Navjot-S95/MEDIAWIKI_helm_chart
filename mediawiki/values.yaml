@@ -53,7 +53,7 @@ envVars:
 - name: MEDIAWIKI_EXTERNAL_HTTP_PORT_NUMBER
   value: "80"
 
-MEDIAWIKI_HOST: "45.79.244.164"
+MEDIAWIKI_HOST: "HERECOMESIP"
 
 service:
   type: LoadBalancer
