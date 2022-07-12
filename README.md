@@ -22,15 +22,25 @@ It also packages the [mariadb](https://hub.docker.com/r/bitnami/mariadb/) deploy
 
 ## Installing the Chart
 
-To install the chart with the release name `my-release`:
+To install the chart with the release name `mywiki`:
 
 ```console
-$ helm install mywiki ediawiki
+$ helm repo add https://Navjot-S95.github.com/MEDIAWIKI_helm_chart
+$ helm install mywiki wiki/mediawiki
+```
+> **Tip**: List all releases using `helm list`
+**Note**:
+### For Mediawiki to function Properly
+> We need to specify `mediawikiHost` parameter to specify the LoadBalancer IP address of the Mediawiki service which we get after helm install.
+> Run below commands after running helm install.
+```console
+$ export SERVICE_IP=$(kubectl get services mywiki-mediawiki --output jsonpath='{.status.loadBalancer.ingress[0].ip}')
+$ helm upgrade mywiki wiki/mediawiki --set MEDIAWIKI_HOST=$SERVICE_IP
 ```
 
 The command deploys MediaWiki on the Kubernetes cluster in the default configuration.
 
-> **Tip**: List all releases using `helm list`
+
 
 ## Uninstalling the Chart
 
@@ -44,7 +54,7 @@ The command removes all the Kubernetes components associated with the chart and 
 
 ## Parameters
 
-### Mediawiki parameters
+### Mediawiki and mariadb parameters
 
 | Name                 | Description                                                                                                                                        | Value                 |
 | -------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------- |                                                                                 
@@ -53,3 +63,10 @@ The command removes all the Kubernetes components associated with the chart and 
 | `image.pullPolicy`   | Image pull policy                                                                                                                                  | `IfNotPresent`        |
 | `persistence.size`   | PVC size for mediawiki                                                                                                                             | `1Gi`                 |
 | `updateStrategy.type`| StrategyType can be set to RollingUpdate or OnDelete                                                                                               | `RollingUpdate`       |
+| `replicaCount`| Number of replica's                                                                                               | `1`       |
+| `MEDIAWIKI_HOST`| FQDN (recommended) or the public IP address of the Mediawiki service                                                                                               |        |
+| `mariadb.image.repository`   | mariadb image repository                                                                                                                         | `docker.io/bitnami/mariadb`   |
+| `mariadb.image.tag`          | mariadb image tag (immutable tags are recommended)                                                                                               | `10.6` |
+| `mariadb.image.pullPolicy`   | Image pull policy                                                                                                                                  | `IfNotPresent`        |
+
+## Deployment and Autoscaling
