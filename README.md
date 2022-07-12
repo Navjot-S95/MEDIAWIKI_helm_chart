@@ -25,7 +25,7 @@ It also packages the [mariadb](https://hub.docker.com/r/bitnami/mariadb/) deploy
 To install the chart with the release name `mywiki`:
 
 ```console
-$ helm repo add https://navjot-s95.github.io/MEDIAWIKI_helm_chart/
+$ helm repo add wiki https://navjot-s95.github.io/MEDIAWIKI_helm_chart/
 $ helm install mywiki wiki/mediawiki
 ```
 > **Tip**: List all releases using `helm list`
